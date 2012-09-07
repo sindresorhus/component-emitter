@@ -1,13 +1,7 @@
 
 /**
- * Expose `Emitter`.
- */
-
-module.exports = Emitter;
-
-/**
  * Initialize a new `Emitter`.
- * 
+ *
  * @api public
  */
 
@@ -101,7 +95,7 @@ Emitter.prototype.off = function(event, fn){
  *
  * @param {String} event
  * @param {Mixed} ...
- * @return {Emitter} 
+ * @return {Emitter}
  */
 
 Emitter.prototype.emit = function(event){
@@ -142,3 +136,12 @@ Emitter.prototype.hasListeners = function(event){
   return !! this.listeners(event).length;
 };
 
+/**
+ * Expose `Emitter`.
+ */
+
+if ('undefined' == typeof exports) {
+  window.Emitter = Emitter;
+} else {
+  module.exports = Emitter;
+}
