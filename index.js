@@ -7,13 +7,12 @@ module.exports = Emitter;
 
 /**
  * Initialize a new `Emitter`.
- * 
+ *
  * @api public
  */
 
 function Emitter(obj) {
   if (obj) return mixin(obj);
-  this._callbacks = {};
 };
 
 /**
@@ -25,7 +24,6 @@ function Emitter(obj) {
  */
 
 function mixin(obj) {
-  obj._callbacks = {};
   for (var key in Emitter.prototype) {
     obj[key] = Emitter.prototype[key];
   }
@@ -42,8 +40,7 @@ function mixin(obj) {
  */
 
 Emitter.prototype.on = function(event, fn){
-  (this._callbacks[event] = this._callbacks[event] || [])
-    .push(fn);
+  this.thisCallbacks(event).push(fn);
   return this;
 };
 
@@ -81,12 +78,12 @@ Emitter.prototype.once = function(event, fn){
  */
 
 Emitter.prototype.off = function(event, fn){
-  var callbacks = this._callbacks[event];
+  var callbacks = this.thisCallbacks(event);
   if (!callbacks) return this;
 
   // remove all handlers
   if (1 == arguments.length) {
-    delete this._callbacks[event];
+    this._callbacks[event] = null;
     return this;
   }
 
@@ -101,12 +98,12 @@ Emitter.prototype.off = function(event, fn){
  *
  * @param {String} event
  * @param {Mixed} ...
- * @return {Emitter} 
+ * @return {Emitter}
  */
 
 Emitter.prototype.emit = function(event){
   var args = [].slice.call(arguments, 1)
-    , callbacks = this._callbacks[event];
+    , callbacks = this._callbacks && this._callbacks[event];
 
   if (callbacks) {
     callbacks = callbacks.slice(0);
@@ -127,7 +124,7 @@ Emitter.prototype.emit = function(event){
  */
 
 Emitter.prototype.listeners = function(event){
-  return this._callbacks[event] || [];
+  return this._callbacks && this._callbacks[event] || [];
 };
 
 /**
@@ -142,3 +139,37 @@ Emitter.prototype.hasListeners = function(event){
   return !! this.listeners(event).length;
 };
 
+/**
+ * Get/create callbacks of "this" emitter.
+ *
+ * @param {String} event
+ * @return {Array}
+ * @api private
+ */
+
+Emitter.prototype.thisCallbacks = function(event) {
+  if (!this._callbacks) {
+    this._callbacks = {};
+    this._callbacks._owner = this;
+  } else if (this._callbacks._owner !== this) {
+    this._callbacks = oCreate(this._callbacks);
+    this._callbacks._owner = this;
+  }
+  var h = this._callbacks[event];
+  if (!h) {
+    h = [];
+    h._owner = this;
+    return this._callbacks[event] = h;
+  } else if (h._owner !== this) {
+    h = h.slice();
+    h._owner = this;
+    return this._callbacks[event] = h;
+  }
+  return h
+};
+
+var oCreate = Object.create || function (obj) {
+  function Klass () {}
+  Klass.prototype = obj;
+  return new Klass;
+}
