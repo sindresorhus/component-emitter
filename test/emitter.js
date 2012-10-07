@@ -43,16 +43,16 @@ describe('Emitter', function(){
     it('should add a single-shot listener', function(){
       var emitter = new Emitter;
       var calls = [];
-  
+
       emitter.once('foo', function(val){
         calls.push('one', val);
       });
-  
+
       emitter.emit('foo', 1);
       emitter.emit('foo', 2);
       emitter.emit('foo', 3);
       emitter.emit('bar', 1);
-  
+
       calls.should.eql([ 'one', 1 ]);
     })
   })
@@ -131,7 +131,10 @@ describe('Emitter', function(){
         var emitter = new Emitter;
         function foo(){}
         emitter.on('foo', foo);
-        emitter.listeners('foo').should.eql([foo]);
+        var l = emitter.listeners('foo');
+        l.should.be.an.instanceOf(Array);
+        l.length.should.equal(1);
+        l[0].should.equal(foo);
       })
     })
 
@@ -157,6 +160,37 @@ describe('Emitter', function(){
         var emitter = new Emitter;
         emitter.hasListeners('foo').should.be.false;
       })
+    })
+  })
+
+  describe('supports subscriptions on prototype', function () {
+    it('should call inherited and self listeners', function () {
+      var proto = new Emitter;
+      var emitter = Object.create(proto);
+      var calls = '';
+
+      proto.on('foo', function () {
+        calls += 'proto;';
+      });
+
+      emitter.on('foo', function () {
+        calls += 'emitter;';
+      });
+
+      emitter.emit('foo');
+      calls.should.equal('proto;emitter;')
+    })
+
+    it('should not touch proto object', function () {
+      var proto = new Emitter;
+      var emitter = Object.create(proto);
+      var calls = '';
+
+      proto.on('foo', function () {});
+      emitter.listeners('foo').length.should.equal(1);
+      emitter.off('foo');
+      emitter.listeners('foo').length.should.equal(0);
+      proto.listeners('foo').length.should.equal(1);
     })
   })
 })
