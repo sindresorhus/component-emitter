@@ -1,4 +1,3 @@
-
 /**
  * Expose `Emitter`.
  */
@@ -12,6 +11,7 @@ module.exports = Emitter;
  */
 
 function Emitter(obj) {
+  obj = obj || this;
   if (obj) return mixin(obj);
 };
 
