@@ -168,6 +168,8 @@ function Subscription(emitter, event, fn) {
 
 Subscription.prototype.cancel = function(){
   this.emitter.off(this.event, this.fn);
+  this.emitter = null;
+  this.fn = null;
 };
 
 
