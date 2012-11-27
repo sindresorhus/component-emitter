@@ -7,7 +7,7 @@ module.exports = Emitter;
 
 /**
  * Initialize a new `Emitter`.
- * 
+ *
  * @api public
  */
 
@@ -35,7 +35,7 @@ function mixin(obj) {
  *
  * @param {String} event
  * @param {Function} fn
- * @return {Emitter}
+ * @return {Subscription}
  * @api public
  */
 
@@ -43,7 +43,7 @@ Emitter.prototype.on = function(event, fn){
   this._callbacks = this._callbacks || {};
   (this._callbacks[event] = this._callbacks[event] || [])
     .push(fn);
-  return this;
+  return new Subscription(this, event, fn);
 };
 
 /**
@@ -52,7 +52,7 @@ Emitter.prototype.on = function(event, fn){
  *
  * @param {String} event
  * @param {Function} fn
- * @return {Emitter}
+ * @return {Subscription}
  * @api public
  */
 
@@ -67,7 +67,7 @@ Emitter.prototype.once = function(event, fn){
 
   fn._off = on;
   this.on(event, on);
-  return this;
+  return new Subscription(this, event, on);
 };
 
 /**
@@ -102,7 +102,7 @@ Emitter.prototype.off = function(event, fn){
  *
  * @param {String} event
  * @param {Mixed} ...
- * @return {Emitter} 
+ * @return {Emitter}
  */
 
 Emitter.prototype.emit = function(event){
@@ -144,4 +144,30 @@ Emitter.prototype.listeners = function(event){
 Emitter.prototype.hasListeners = function(event){
   return !! this.listeners(event).length;
 };
+
+/**
+ * Initialize a subscription to `emitter`'s `event` with `fn`.
+ *
+ * @param {Emitter} emitter
+ * @param {String} event
+ * @param {Function} fn
+ * @api private
+ */
+
+function Subscription(emitter, event, fn) {
+  this.emitter = emitter;
+  this.event = event;
+  this.fn = fn;
+}
+
+/**
+ * Cancel the subscription.
+ *
+ * @api public
+ */
+
+Subscription.prototype.cancel = function(){
+  this.emitter.off(this.event, this.fn);
+};
+
 

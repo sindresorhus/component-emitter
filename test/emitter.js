@@ -37,6 +37,21 @@ describe('Emitter', function(){
 
       calls.should.eql([ 'one', 1, 'two', 1, 'one', 2, 'two', 2 ]);
     })
+
+    it('should return a subscription', function(){
+      var emitter = new Emitter;
+      var calls = [];
+
+      var foo = emitter.on('foo', function(){
+        calls.push('foo');
+      });
+
+      emitter.emit('foo');
+      foo.cancel();
+      emitter.emit('foo');
+
+      calls.should.eql(['foo']);
+    })
   })
 
   describe('.once(event, fn)', function(){
@@ -54,6 +69,20 @@ describe('Emitter', function(){
       emitter.emit('bar', 1);
   
       calls.should.eql([ 'one', 1 ]);
+    })
+
+    it('should return a subscription', function(){
+      var emitter = new Emitter;
+      var calls = [];
+      
+      var foo = emitter.on('foo', function(){
+        calls.push('foo');
+      });
+      
+      foo.cancel();
+      emitter.emit('foo');
+      
+      calls.should.eql([]);
     })
   })
 
