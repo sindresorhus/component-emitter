@@ -12,8 +12,8 @@ module.exports = Emitter;
  * @api public
  */
 
-function Emitter(obj) {
-  if (obj) return mixin(obj);
+function Emitter() {
+  this._callbacks = {}
 }
 
 /**
@@ -23,8 +23,7 @@ function Emitter(obj) {
  * @return {Object}
  * @api private
  */
-
-function mixin(obj) {
+Emitter.mixin = function (obj) {
   for (var key in Emitter.prototype) {
     obj[key] = Emitter.prototype[key];
   }
@@ -41,9 +40,11 @@ function mixin(obj) {
  */
 
 Emitter.prototype.on = function(event, fn){
-  this._callbacks = this._callbacks || {};
-  this._callbacks[event] = (this._callbacks[event] || [])
-    .concat(fn);
+  var calls = this._callbacks
+  if (calls[event])
+    calls[event] = calls[event].concat(fn)
+  else
+    calls[event] = [fn]
   return this;
 };
 
