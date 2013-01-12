@@ -1,3 +1,4 @@
+var slice = require('sliced')
 
 /**
  * Expose `Emitter`.
@@ -11,9 +12,9 @@ module.exports = Emitter;
  * @api public
  */
 
-function Emitter(obj) {
-  if (obj) return mixin(obj);
-};
+function Emitter() {
+  this._callbacks = {}
+}
 
 /**
  * Mixin the emitter properties.
@@ -22,8 +23,7 @@ function Emitter(obj) {
  * @return {Object}
  * @api private
  */
-
-function mixin(obj) {
+Emitter.mixin = function (obj) {
   for (var key in Emitter.prototype) {
     obj[key] = Emitter.prototype[key];
   }
@@ -40,9 +40,11 @@ function mixin(obj) {
  */
 
 Emitter.prototype.on = function(event, fn){
-  this._callbacks = this._callbacks || {};
-  (this._callbacks[event] = this._callbacks[event] || [])
-    .push(fn);
+  var calls = this._callbacks
+  if (calls[event])
+    calls[event] = calls[event].concat(fn)
+  else
+    calls[event] = [fn]
   return this;
 };
 
@@ -84,18 +86,20 @@ Emitter.prototype.off =
 Emitter.prototype.removeListener =
 Emitter.prototype.removeAllListeners = function(event, fn){
   this._callbacks = this._callbacks || {};
-  var callbacks = this._callbacks[event];
-  if (!callbacks) return this;
+  var callbacks = this._callbacks
 
   // remove all handlers
-  if (1 == arguments.length) {
-    delete this._callbacks[event];
+  if (fn == null) {
+    delete callbacks[event];
     return this;
   }
 
-  // remove specific handler
-  var i = callbacks.indexOf(fn._off || fn);
-  if (~i) callbacks.splice(i, 1);
+  if (callbacks[event]) {
+    // remove specific handler
+    callbacks[event] = callbacks[event].filter(function (cb) {
+      return cb !== fn && cb !== fn._off
+    })
+  }
   return this;
 };
 
@@ -109,11 +113,10 @@ Emitter.prototype.removeAllListeners = function(event, fn){
 
 Emitter.prototype.emit = function(event){
   this._callbacks = this._callbacks || {};
-  var args = [].slice.call(arguments, 1)
+  var args = slice(arguments, 1)
     , callbacks = this._callbacks[event];
 
   if (callbacks) {
-    callbacks = callbacks.slice(0);
     for (var i = 0, len = callbacks.length; i < len; ++i) {
       callbacks[i].apply(this, args);
     }

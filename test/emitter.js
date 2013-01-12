@@ -161,10 +161,11 @@ describe('Emitter', function(){
   })
 })
 
-describe('Emitter(obj)', function(){
+describe('Emitter.mixin(obj)', function(){
   it('should mixin', function(done){
     var proto = {};
-    Emitter(proto);
+    Emitter.mixin(proto);
+    Emitter.call(proto)
     proto.on('something', done);
     proto.emit('something');
   })
