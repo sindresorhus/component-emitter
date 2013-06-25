@@ -126,6 +126,9 @@ Emitter.prototype.emit = function(event){
   var args = [].slice.call(arguments, 1)
     , callbacks = this._callbacks[event];
 
+  // "all" event
+  if ('*' != event) this.emit.apply(this, ['*', event].concat(args));
+
   if (callbacks) {
     callbacks = callbacks.slice(0);
     for (var i = 0, len = callbacks.length; i < len; ++i) {

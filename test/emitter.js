@@ -18,6 +18,22 @@ describe('Custom', function(){
 })
 
 describe('Emitter', function(){
+  describe('.emit(event, args...)', function(){
+    it('should emit all event', function(){
+      var emitter = new Emitter;
+      var calls = [];
+
+      emitter.on('*', function(event, val){
+        calls.push(event, val);
+      });
+
+      emitter.emit('one', 1);
+      emitter.emit('two', 2);
+
+      calls.should.eql([ 'one', 1, 'two', 2 ]);
+    })
+  })
+
   describe('.on(event, fn)', function(){
     it('should add listeners', function(){
       var emitter = new Emitter;
