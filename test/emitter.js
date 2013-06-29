@@ -104,7 +104,24 @@ describe('Emitter', function(){
       emitter.emit('tobi');
       called.should.be.false;
     });
-  })
+
+    it('should remove all listeners when `fn` is undefined', function() {
+      var emitter = new Emitter;
+      var calls = [];
+
+      function one() { calls.push('one'); }
+      function two() { calls.push('two'); }
+
+      emitter.on('foo', one);
+      emitter.on('foo', two);
+      emitter.off('foo', undefined);
+
+      emitter.emit('foo');
+      emitter.emit('foo');
+
+      calls.should.eql([]);
+    });
+  });
 
   describe('.off(event)', function(){
     it('should remove all listeners for an event', function(){
