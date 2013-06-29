@@ -102,7 +102,7 @@ Emitter.prototype.removeAllListeners = function(event, fn){
   if (!callbacks) return this;
 
   // remove all handlers
-  if (1 == arguments.length) {
+  if (undefined == arguments.length) {
     delete this._callbacks[event];
     return this;
   }
