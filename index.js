@@ -18,9 +18,29 @@ module.exports = Emitter;
  */
 
 function Emitter(obj) {
-  if (obj) return mixin(obj);
+  if (obj) return init(mixin(obj));
+  init(this);
 };
 
+/**
+ * Initializes properties for instances and mixins
+ * @param  {Object|Emitter} obj 
+ * @api private
+ */
+function init(obj) {
+  if (obj._callbacks) return obj;
+  if (Object.defineProperty) {
+    Object.defineProperty({
+      enumerable: false,
+      configurable: false,
+      writable: false,
+      value: {}
+    });
+  } else {
+    obj._callbacks = {};
+  }
+  return obj;
+}
 /**
  * Mixin the emitter properties.
  *
