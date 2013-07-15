@@ -38,6 +38,7 @@ function init(obj) {
     obj._callbacks = {};
   }
 }
+
 /**
  * Mixin the emitter properties.
  *
@@ -81,8 +82,7 @@ Emitter.prototype.on = function(event, fn){
 
 Emitter.prototype.once = function(event, fn){
   var self = this;
-  if(!this.hasOwnProperty('_callbacks')) init(this);
-
+  
   function on() {
     self.off(event, on);
     fn.apply(this, arguments);
@@ -106,7 +106,7 @@ Emitter.prototype.once = function(event, fn){
 Emitter.prototype.off =
 Emitter.prototype.removeListener =
 Emitter.prototype.removeAllListeners = function(event, fn){
-  if(!this.hasOwnProperty('_callbacks')) init(this);
+  if(!this.hasOwnProperty('_callbacks')) return;
   // all
   if (0 == arguments.length) {
     this._callbacks = {};
@@ -138,7 +138,7 @@ Emitter.prototype.removeAllListeners = function(event, fn){
  */
 
 Emitter.prototype.emit = function(event){
-  if(!this.hasOwnProperty('_callbacks')) init(this);
+  if(!this.hasOwnProperty('_callbacks')) return;
   var args = [].slice.call(arguments, 1)
     , callbacks = this._callbacks[event];
 
@@ -161,7 +161,7 @@ Emitter.prototype.emit = function(event){
  */
 
 Emitter.prototype.listeners = function(event){
-  if(!this.hasOwnProperty('_callbacks')) init(this);
+  if(!this.hasOwnProperty('_callbacks')) return [];
   return this._callbacks[event] || [];
 };
 

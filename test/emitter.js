@@ -37,6 +37,25 @@ describe('Emitter', function(){
 
       calls.should.eql([ 'one', 1, 'two', 1, 'one', 2, 'two', 2 ]);
     })
+    
+    it('should not share callbacks across instances', function(){
+      var calls = []
+      Custom.prototype.on('foo', function(){
+        calls.push('proto')
+      })
+      var a = new Custom()
+      a.on('foo', function(){
+        calls.push('a')
+      })
+      var b = new Custom()
+      b.on('foo', function(){
+        calls.push('b')
+      })
+
+      b.emit('foo')
+      calls.should.eql(['b'])
+
+    })
   })
 
   describe('.once(event, fn)', function(){
