@@ -182,6 +182,15 @@ describe('Emitter', function(){
       })
     })
   })
+
+  describe('._callbacks', function(){
+    it('should be non-enumerable', function(){
+      var emitter = new Emitter()
+      emitter.on('foo', function(){})
+      emitter.should.have.property('_callbacks')
+      Object.keys(emitter).indexOf('_callbacks').should.eql(-1)
+    })
+  })
 })
 
 describe('Emitter(obj)', function(){

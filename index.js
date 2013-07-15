@@ -18,28 +18,25 @@ module.exports = Emitter;
  */
 
 function Emitter(obj) {
-  if (obj) return init(mixin(obj));
-  init(this);
+  if (obj) return mixin(obj);
 };
 
 /**
- * Initializes properties for instances and mixins
+ * Initializes the emitter and ensures it has the _callbacks property
  * @param  {Object|Emitter} obj 
  * @api private
  */
 function init(obj) {
-  if (obj._callbacks) return obj;
   if (Object.defineProperty) {
-    Object.defineProperty({
+    Object.defineProperty(obj, '_callbacks', {
       enumerable: false,
       configurable: false,
-      writable: false,
+      writable: true,
       value: {}
     });
   } else {
     obj._callbacks = {};
   }
-  return obj;
 }
 /**
  * Mixin the emitter properties.
@@ -66,7 +63,7 @@ function mixin(obj) {
  */
 
 Emitter.prototype.on = function(event, fn){
-  this._callbacks = this._callbacks || {};
+  if(!this.hasOwnProperty('_callbacks')) init(this);
   (this._callbacks[event] = this._callbacks[event] || [])
     .push(fn);
   return this;
@@ -84,7 +81,7 @@ Emitter.prototype.on = function(event, fn){
 
 Emitter.prototype.once = function(event, fn){
   var self = this;
-  this._callbacks = this._callbacks || {};
+  if(!this.hasOwnProperty('_callbacks')) init(this);
 
   function on() {
     self.off(event, on);
@@ -109,8 +106,7 @@ Emitter.prototype.once = function(event, fn){
 Emitter.prototype.off =
 Emitter.prototype.removeListener =
 Emitter.prototype.removeAllListeners = function(event, fn){
-  this._callbacks = this._callbacks || {};
-
+  if(!this.hasOwnProperty('_callbacks')) init(this);
   // all
   if (0 == arguments.length) {
     this._callbacks = {};
@@ -142,7 +138,7 @@ Emitter.prototype.removeAllListeners = function(event, fn){
  */
 
 Emitter.prototype.emit = function(event){
-  this._callbacks = this._callbacks || {};
+  if(!this.hasOwnProperty('_callbacks')) init(this);
   var args = [].slice.call(arguments, 1)
     , callbacks = this._callbacks[event];
 
@@ -165,7 +161,7 @@ Emitter.prototype.emit = function(event){
  */
 
 Emitter.prototype.listeners = function(event){
-  this._callbacks = this._callbacks || {};
+  if(!this.hasOwnProperty('_callbacks')) init(this);
   return this._callbacks[event] || [];
 };
 
