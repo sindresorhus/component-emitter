@@ -46,7 +46,7 @@ function mixin(obj) {
  */
 
 Emitter.prototype.on = function(event, fn){
-  this._callbacks = this._callbacks || {};
+  this._callbacks = this.hasOwnProperty('_callbacks') && this._callbacks || {};
   (this._callbacks[event] = this._callbacks[event] || [])
     .push(fn);
   return this;
@@ -64,7 +64,7 @@ Emitter.prototype.on = function(event, fn){
 
 Emitter.prototype.once = function(event, fn){
   var self = this;
-  this._callbacks = this._callbacks || {};
+  this._callbacks = this.hasOwnProperty('_callbacks') && this._callbacks || {};
 
   function on() {
     self.off(event, on);
@@ -89,7 +89,7 @@ Emitter.prototype.once = function(event, fn){
 Emitter.prototype.off =
 Emitter.prototype.removeListener =
 Emitter.prototype.removeAllListeners = function(event, fn){
-  this._callbacks = this._callbacks || {};
+  this._callbacks = this.hasOwnProperty('_callbacks') && this._callbacks || {};
 
   // all
   if (0 == arguments.length) {
@@ -122,7 +122,7 @@ Emitter.prototype.removeAllListeners = function(event, fn){
  */
 
 Emitter.prototype.emit = function(event){
-  this._callbacks = this._callbacks || {};
+  this._callbacks = this.hasOwnProperty('_callbacks') && this._callbacks || {};
   var args = [].slice.call(arguments, 1)
     , callbacks = this._callbacks[event];
 
@@ -145,7 +145,7 @@ Emitter.prototype.emit = function(event){
  */
 
 Emitter.prototype.listeners = function(event){
-  this._callbacks = this._callbacks || {};
+  this._callbacks = this.hasOwnProperty('_callbacks') && this._callbacks || {};
   return this._callbacks[event] || [];
 };
 
