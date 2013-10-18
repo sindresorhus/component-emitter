@@ -37,6 +37,25 @@ describe('Emitter', function(){
 
       calls.should.eql([ 'one', 1, 'two', 1, 'one', 2, 'two', 2 ]);
     })
+    
+    it('should not share callbacks across instances', function(){
+      var calls = []
+      Custom.prototype.on('foo', function(){
+        calls.push('proto')
+      })
+      var a = new Custom()
+      a.on('foo', function(){
+        calls.push('a')
+      })
+      var b = new Custom()
+      b.on('foo', function(){
+        calls.push('b')
+      })
+
+      b.emit('foo')
+      calls.should.eql(['b'])
+
+    })
   })
 
   describe('.once(event, fn)', function(){
@@ -180,6 +199,15 @@ describe('Emitter', function(){
         var emitter = new Emitter;
         emitter.hasListeners('foo').should.be.false;
       })
+    })
+  })
+
+  describe('._callbacks', function(){
+    it('should be non-enumerable', function(){
+      var emitter = new Emitter()
+      emitter.on('foo', function(){})
+      emitter.should.have.property('_callbacks')
+      Object.keys(emitter).indexOf('_callbacks').should.eql(-1)
     })
   })
 })
