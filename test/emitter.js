@@ -37,6 +37,22 @@ describe('Emitter', function(){
 
       calls.should.eql([ 'one', 1, 'two', 1, 'one', 2, 'two', 2 ]);
     })
+
+    it('should allow listeners implementing handleEvent', function(){
+      var emitter = new Emitter;
+      var results = [];
+
+      var listener = {
+        handleEvent: function(event, val){
+          results = [event, val, this === listener];
+        }
+      };
+
+      emitter.on('foo', listener);
+
+      emitter.emit('foo', 1);
+      results.should.eql(['foo', 1, true]);
+    })
   })
 
   describe('.once(event, fn)', function(){
@@ -54,6 +70,29 @@ describe('Emitter', function(){
       emitter.emit('bar', 1);
 
       calls.should.eql([ 'one', 1 ]);
+    })
+
+    it('should allow listeners implementing handleEvent', function(){
+      var emitter = new Emitter
+      var results = []
+        , called;
+
+      var listener = {
+        handleEvent: function(event, val){
+          results = [event, val, this === listener];
+          called = true;
+        }
+      };
+
+      emitter.once('foo', listener);
+
+      emitter.emit('foo', 1);
+      called.should.be.true;
+      results.should.eql(['foo', 1, true]);
+
+      called = false;
+      emitter.emit('foo', 1);
+      called.should.be.false;
     })
   })
 

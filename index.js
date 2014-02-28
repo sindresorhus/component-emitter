@@ -31,6 +31,27 @@ function mixin(obj) {
 }
 
 /**
+ * Applies a callback which may have been either as a function, in which case
+ * the `fnOrObj` parameter is called directly, or an object implementing the
+ * `handleEvent` method, in which case `fnOrObj.handleEvent` is called.
+ *
+ * @param {String} event
+ * @param {Object} fnOrObj
+ * @param {Object} thisObj
+ * @param {Array} args
+ * @api private
+ */
+
+function applyCallback(event, fnOrObj, thisObj, args) {
+  if (typeof fnOrObj === 'function') {
+    fnOrObj.apply(thisObj, args);
+  } else if (typeof fnOrObj.handleEvent === 'function') {
+    if (!(args instanceof Array)) args = [].slice.call(args);
+    fnOrObj.handleEvent.apply(fnOrObj, [event].concat(args));
+  }
+}
+
+/**
  * Listen on the given `event` with `fn`.
  *
  * @param {String} event
@@ -63,7 +84,7 @@ Emitter.prototype.once = function(event, fn){
 
   function on() {
     self.off(event, on);
-    fn.apply(this, arguments);
+    applyCallback(event, fn, this, arguments);
   }
 
   on.fn = fn;
@@ -131,7 +152,7 @@ Emitter.prototype.emit = function(event){
   if (callbacks) {
     callbacks = callbacks.slice(0);
     for (var i = 0, len = callbacks.length; i < len; ++i) {
-      callbacks[i].apply(this, args);
+      applyCallback(event, callbacks[i], this, args);
     }
   }
 
