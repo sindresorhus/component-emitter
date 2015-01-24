@@ -102,11 +102,10 @@ Emitter.prototype.removeEventListener = function(event, fn){
 
   // remove specific handler
   var cb;
-  for (var i = 0; i < callbacks.length; i++) {
+  for (var i = callbacks.length; i--;) {
     cb = callbacks[i];
     if (cb === fn || cb.fn === fn) {
       callbacks.splice(i, 1);
-      break;
     }
   }
   return this;
