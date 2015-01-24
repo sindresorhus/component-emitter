@@ -65,7 +65,9 @@ describe('Emitter', function(){
       function one() { calls.push('one'); }
       function two() { calls.push('two'); }
 
+      emitter.on('foo', two);
       emitter.on('foo', one);
+      emitter.on('foo', two);
       emitter.on('foo', two);
       emitter.off('foo', two);
 
