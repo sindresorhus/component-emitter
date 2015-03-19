@@ -132,6 +132,9 @@ Emitter.prototype.emit = function(event){
     }
   }
 
+  if(event !== '*')
+    this.emit.apply(this, ['*', event].concat(args));
+
   return this;
 };
 

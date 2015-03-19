@@ -201,6 +201,18 @@ describe('Emitter', function(){
       })
     })
   })
+
+  describe('.on("*", fn)', function() {
+    it('should receive all events', function() {
+      var calls = [];
+      var emitter = new Emitter;
+
+      emitter.on('*', function(e, arg) { calls.push([e, arg]); });
+      emitter.emit('test', 'a');
+
+      calls.should.eql([['test', 'a']]);
+    })
+  })
 })
 
 describe('Emitter(obj)', function(){
