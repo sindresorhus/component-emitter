@@ -157,5 +157,5 @@ Emitter.prototype.listeners = function(event){
  */
 
 Emitter.prototype.hasListeners = function(event){
-  return !! this.listeners(event).length;
+  return !! this._callbacks['$' + event].length;
 };
