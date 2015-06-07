@@ -3,7 +3,9 @@
  * Expose `Emitter`.
  */
 
-module.exports = Emitter;
+if(!!module && !!module.exports) {
+  module.exports = Emitter;
+}
 
 /**
  * Initialize a new `Emitter`.
