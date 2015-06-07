@@ -3,7 +3,7 @@
  * Expose `Emitter`.
  */
 
-if(!!module && !!module.exports) {
+if(typeof module!=='undefined' && typeof module.exports!=='undefined') {
   module.exports = Emitter;
 }
 
