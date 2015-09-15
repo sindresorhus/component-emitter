@@ -120,6 +120,9 @@ Emitter.prototype.removeEventListener = function(event, fn){
  * @return {Emitter}
  */
 
+Emitter.prototype.trigger = 
+Emitter.prototype.triggerHandler = 
+Emitter.prototype.dispatchEvent = 
 Emitter.prototype.emit = function(event){
   this._callbacks = this._callbacks || {};
   var args = [].slice.call(arguments, 1)
