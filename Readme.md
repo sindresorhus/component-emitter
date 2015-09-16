@@ -44,6 +44,7 @@ Emitter(User.prototype);
 ### Emitter#on(event, fn)
 
   Register an `event` handler `fn`.
+  Set `this.handled = true` inside handler `fn` to stop event propagation.
 
 ### Emitter#once(event, fn)
 

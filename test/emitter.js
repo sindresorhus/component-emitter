@@ -201,6 +201,29 @@ describe('Emitter', function(){
       })
     })
   })
+
+  describe('this.handled = true', function () {
+    it('should stop emitting when listener handles an event', function(){
+      var emitter = new Emitter;
+      var calls = [];
+
+      emitter.on('foo', function(val){
+        calls.push('one', val);
+        if (val > 1) {
+          this.handled = true;
+        }
+      });
+
+      emitter.on('foo', function(val){
+        calls.push('two', val);
+      });
+
+      emitter.emit('foo', 1);
+      emitter.emit('foo', 2);
+
+      calls.should.eql([ 'one', 1, 'two', 1, 'one', 2 ]);
+    })
+  })
 })
 
 describe('Emitter(obj)', function(){

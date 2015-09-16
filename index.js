@@ -127,8 +127,15 @@ Emitter.prototype.emit = function(event){
 
   if (callbacks) {
     callbacks = callbacks.slice(0);
+
+    this.handled = false;
     for (var i = 0, len = callbacks.length; i < len; ++i) {
       callbacks[i].apply(this, args);
+
+      if (this.handled) {
+        this.handled = false;
+        break;
+      }
     }
   }
 
