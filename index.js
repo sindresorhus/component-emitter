@@ -121,9 +121,19 @@ Emitter.prototype.removeEventListener = function(event, fn){
  */
 
 Emitter.prototype.emit = function(event){
-  this._callbacks = this._callbacks || {};
+  if (!this._callbacks) {
+    return;
+  }
+
+  var eventType = event.type ? event.type : event;
   var args = [].slice.call(arguments, 1)
-    , callbacks = this._callbacks['$' + event];
+    , callbacks = this._callbacks['$' + eventType];
+  if (event.type) {
+    event.target = this;
+    event.extraParams = event.extraParams || args.slice(0);
+    event.data = event.data || args.slice(0);
+    args.splice(0, 0, event);
+  }
 
   if (callbacks) {
     callbacks = callbacks.slice(0);

@@ -211,3 +211,15 @@ describe('Emitter(obj)', function(){
     proto.emit('something');
   })
 })
+describe('event object', function() {
+  it('should emit event object', function(done){
+    var emitter = new Emitter;
+    var event;
+    emitter.on('foo', function(evt) { event = evt;});
+    emitter.emit({"type": "foo"});
+    event.should.be.not.null;
+    event.type.should.eql("foo");
+    event.target.should.eql(emitter);
+    done();
+  })
+})
