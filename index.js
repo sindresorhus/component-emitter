@@ -131,6 +131,16 @@ Emitter.prototype._removeOneEventListener = function(event, fn){
   return this;
 };
 
+var ALL = "*";
+var callAll = function(callbacks, target, args) {
+  if (!callbacks) {
+    return;
+  }
+  callbacks = callbacks.slice(0);
+  for (var i = 0, len = callbacks.length; i < len; ++i) {
+    callbacks[i].apply(target, args);
+  }
+}
 /**
  * Emit `event` with the given args.
  *
@@ -147,23 +157,20 @@ Emitter.prototype.emit = function(event){
     return;
   }
 
-  var eventType = event.type ? event.type : event;
-  var args = [].slice.call(arguments, 1)
-    , callbacks = this._callbacks['$' + eventType];
+  // remove the first argument which is the event type or the event object
+  var args = [].slice.call(arguments, 1);
+  var eventType = event;
   if (event.type) {
+    // in case we have to emit an event object
+    eventType = event.type;
     event.target = this;
-    event.extraParams = event.extraParams || args.slice(0);
-    event.data = event.data || args.slice(0);
+    event.extraParams = event.extraParams || args;
+    event.data = event.data || args;
     args.splice(0, 0, event);
   }
 
-  if (callbacks) {
-    callbacks = callbacks.slice(0);
-    for (var i = 0, len = callbacks.length; i < len; ++i) {
-      callbacks[i].apply(this, args);
-    }
-  }
-
+  callAll(this._callbacks['$' + eventType], this, args);
+  callAll(this._callbacks['$' + ALL], this, args);
   return this;
 };
 

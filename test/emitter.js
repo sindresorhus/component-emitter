@@ -250,3 +250,19 @@ describe('multiple events', function(){
     done();
   });
 })
+
+describe('wildcard events', function(){
+  it('should run *', function(done){
+    var proto = {};
+    Emitter(proto);
+    var runs = [];
+    proto.on('*', function() {runs.push("*");});
+    proto.on('foo', function() {runs.push("foo");});
+    proto.on('bar', function() {runs.push("bar");});
+    proto.emit('foo');
+    proto.emit('bar');
+    proto.emit("another");
+    runs.should.eql(["foo", "*", "bar", "*", "*"]);
+    done();
+  })
+})
