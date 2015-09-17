@@ -223,3 +223,30 @@ describe('event object', function() {
     done();
   })
 })
+describe('multiple events', function(){
+  it('should add multiple events', function(done){
+    var proto = {};
+    Emitter(proto);
+    var runs = [];
+    proto.on('foo bar', function() { runs.push("foo");});
+    proto.on('bar', function() { runs.push("bar");});
+    proto.emit('foo');
+    runs.should.eql(["foo"]);
+    proto.emit('bar');
+    runs.should.eql(["foo", "foo", "bar"]);
+    done();
+  });
+  it('should remove multiple events', function(done){
+    var proto = {};
+    Emitter(proto);
+    var runs = [];
+    proto.on('foo bar', function() { runs.push("foo");});
+    proto.on('baz', function() { runs.push("bar");});
+    proto.off("bar baz");
+    proto.emit('foo');
+    runs.should.eql(["foo"]);
+    proto.emit('bar');
+    runs.should.eql(["foo"]);
+    done();
+  });
+})

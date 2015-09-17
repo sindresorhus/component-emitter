@@ -30,6 +30,7 @@ function mixin(obj) {
   return obj;
 }
 
+var EVENT_SEPARATOR = " ";
 /**
  * Listen on the given `event` with `fn`.
  *
@@ -41,12 +42,18 @@ function mixin(obj) {
 
 Emitter.prototype.on =
 Emitter.prototype.addEventListener = function(event, fn){
-  this._callbacks = this._callbacks || {};
-  (this._callbacks['$' + event] = this._callbacks['$' + event] || [])
-    .push(fn);
-  return this;
+  event = event.push ? event : event.split(EVENT_SEPARATOR);
+  for (var i = 0, len = event.length; i < len; i++) {
+    this._addOneEventListener(event[i], fn)
+  }
 };
 
+Emitter.prototype._addOneEventListener = function(event, fn) {
+  this._callbacks = this._callbacks || {};
+  (this._callbacks['$' + event] = this._callbacks['$' + event] || [])
+      .push(fn);
+  return this;  
+};
 /**
  * Adds an `event` listener that will be invoked a single
  * time then automatically removed.
@@ -82,11 +89,23 @@ Emitter.prototype.off =
 Emitter.prototype.removeListener =
 Emitter.prototype.removeAllListeners =
 Emitter.prototype.removeEventListener = function(event, fn){
-  this._callbacks = this._callbacks || {};
-
+  if (!this._callbacks) {
+    return this;
+  }
   // all
   if (0 == arguments.length) {
     this._callbacks = {};
+    return this;
+  }
+  event = event.push ? event : event.split(EVENT_SEPARATOR);
+  for (var i = 0, len = event.length; i < len; i++) {
+    this._removeOneEventListener(event[i], fn)
+  }
+  return this;
+};
+
+Emitter.prototype._removeOneEventListener = function(event, fn){
+  if (!this._callbacks) {
     return this;
   }
 
@@ -95,7 +114,7 @@ Emitter.prototype.removeEventListener = function(event, fn){
   if (!callbacks) return this;
 
   // remove all handlers
-  if (1 == arguments.length) {
+  if (!fn) {
     delete this._callbacks['$' + event];
     return this;
   }
