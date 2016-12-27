@@ -130,7 +130,11 @@ Emitter.prototype.emit = function(event){
   if (callbacks) {
     callbacks = callbacks.slice(0);
     for (var i = 0, len = callbacks.length; i < len; ++i) {
-      callbacks[i].apply(this, args);
+      try {
+        callbacks[i].apply(this, args);
+      } catch (exception) {
+        console.error(exception);
+      }
     }
   }
 
