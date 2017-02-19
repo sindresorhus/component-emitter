@@ -181,5 +181,5 @@ Emitter.prototype.hasListeners = function(event){
  * @api public
  */
 Emitter.prototype.eventNames = function(){
-  return Object.keys(this._callbacks);
+  return this._callbacks ? Object.keys(this._callbacks) : [];
 }
