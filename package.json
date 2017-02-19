@@ -1,5 +1,5 @@
 {
-  "name": "component-emitter",
+  "name": "component-emitter2",
   "description": "Event emitter",
   "version": "1.2.2",
   "license": "MIT",
@@ -15,7 +15,7 @@
   "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/component/emitter.git"
+    "url": "https://github.com/nxtedition/emitter.git"
   },
   "scripts": {
     "test": "make test"
