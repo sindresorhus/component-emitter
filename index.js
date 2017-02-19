@@ -173,3 +173,13 @@ Emitter.prototype.listeners = function(event){
 Emitter.prototype.hasListeners = function(event){
   return !! this.listeners(event).length;
 };
+
+/**
+ * Returns an array listing the events for which the emitter has registered listeners.
+ *
+ * @return {Array}
+ * @api public
+ */
+Emitter.prototype.eventNames = function(){
+  return Object.keys(this._callbacks);
+}

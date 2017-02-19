@@ -1,3 +1,7 @@
+1.3.0 / 2017-02-19
+
+ * Added `eventNames`
+
 1.2.2 / 2017-02-19
 
  * Optimized emit
