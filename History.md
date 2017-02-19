@@ -1,3 +1,8 @@
+1.2.2 / 2017-02-19
+
+ * Optimized emit
+ * Fixed memory leak
+ * Replaced `$` prefixing with `Object.create(null)`
 
 1.2.1 / 2016-04-18
 ==================
