@@ -69,7 +69,7 @@ Emitter(User.prototype);
 
   Check if this emitter has `event` handlers.
 
-### Emitter#eventNames(event)
+### Emitter#eventNames()
 
   Returns an array listing the events for which the emitter has registered listeners.
 
