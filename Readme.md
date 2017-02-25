@@ -1,11 +1,11 @@
-# Emitter [![Build Status](https://travis-ci.org/component/emitter.png)](https://travis-ci.org/component/emitter)
+# Emitter
 
   Event emitter component.
 
 ## Installation
 
 ```
-$ component install component/emitter
+$ component install component-emitter2
 ```
 
 ## API
@@ -68,6 +68,10 @@ Emitter(User.prototype);
 ### Emitter#hasListeners(event)
 
   Check if this emitter has `event` handlers.
+
+### Emitter#eventNames()
+
+  Returns an array listing the events for which the emitter has registered listeners.
 
 ## License
 
