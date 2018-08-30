@@ -10,10 +10,13 @@ if (typeof module !== 'undefined') {
 /**
  * Initialize a new `Emitter`.
  *
+ * use it as a constructor or as a decorator for an existing object
+ * cannot be used as a mixin for a constructor's prototype
  * @api public
  */
 
 function Emitter(obj) {
+  (obj || this)._callbacks = Object.create(null);
   if (obj) return mixin(obj);
 };
 
@@ -46,7 +49,6 @@ function mixin(obj) {
 
 Emitter.prototype.on =
 Emitter.prototype.addEventListener = function(event, fn){
-  this._callbacks = this._callbacks || Object.create(null);
   (this._callbacks[event] = this._callbacks[event] || [])
     .push(fn);
   return this;
@@ -87,13 +89,12 @@ Emitter.prototype.off =
 Emitter.prototype.removeListener =
 Emitter.prototype.removeAllListeners =
 Emitter.prototype.removeEventListener = function(event, fn){
+
   // all
   if (arguments.length === 0) {
     this._callbacks = Object.create(null);
     return this;
   }
-  
-  this._callbacks = this._callbacks || Object.create(null);
 
   // specific event
   var callbacks = this._callbacks[event];
@@ -133,10 +134,8 @@ Emitter.prototype.removeEventListener = function(event, fn){
  */
 
 Emitter.prototype.emit = function(event){
-  this._callbacks = this._callbacks || Object.create(null);
-
   var callbacks = this._callbacks[event];
-
+  
   if (callbacks) {
     var args = Array.prototype.slice.call(arguments, 1);
     callbacks = callbacks.slice(0);
@@ -157,7 +156,6 @@ Emitter.prototype.emit = function(event){
  */
 
 Emitter.prototype.listeners = function(event){
-  this._callbacks = this._callbacks || Object.create(null);
   return this._callbacks[event] || [];
 };
 
@@ -180,5 +178,5 @@ Emitter.prototype.hasListeners = function(event){
  * @api public
  */
 Emitter.prototype.eventNames = function(){
-  return this._callbacks ? Object.keys(this._callbacks) : [];
+  return Object.keys(this._callbacks);
 }
