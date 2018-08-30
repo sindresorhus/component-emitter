@@ -73,6 +73,14 @@ Emitter(User.prototype);
 
   Returns an array listing the events for which the emitter has registered listeners.
 
+## Tests
+
+`npm t`
+
+or
+
+` ./node_modules/.bin/mocha --require should --reporter spec`
+ 
 ## License
 
 MIT
