@@ -5,7 +5,7 @@
 ## Installation
 
 ```
-$ component install component-emitter2
+download index.js
 ```
 
 ## API
@@ -13,14 +13,13 @@ $ component install component-emitter2
 ### Emitter(obj)
 
   The `Emitter` may also be used as a mixin. For example
-  a "plain" object may become an emitter, or you may
-  extend an existing prototype.
+  a "plain" object may become an emitter.
 
   As an `Emitter` instance:
 
 ```js
 var Emitter = require('emitter');
-var emitter = new Emitter;
+var emitter = new Emitter();
 emitter.emit('something');
 ```
 
@@ -32,13 +31,6 @@ var user = { name: 'tobi' };
 Emitter(user);
 
 user.emit('im a user');
-```
-
-  As a prototype mixin:
-
-```js
-var Emitter = require('emitter');
-Emitter(User.prototype);
 ```
 
 ### Emitter#on(event, fn)
