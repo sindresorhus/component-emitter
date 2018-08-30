@@ -132,7 +132,7 @@ Emitter.prototype.emit = function(event){
   var callbacks = this._callbacks[event];
   
   if (callbacks) {
-	var args = Array.prototype.slice.call(arguments, 1);
+    var args = Array.prototype.slice.call(arguments, 1);
     callbacks = callbacks.slice(0);
     for (var i = 0, len = callbacks.length; i < len; ++i) {
       callbacks[i].apply(this, args);
