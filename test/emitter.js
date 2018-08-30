@@ -153,7 +153,6 @@ describe('Emitter', function(){
       emitter.on('foo', cb);
       emitter.off('foo', cb);
 
-	  console.log(emitter._callbacks);
       should(emitter._callbacks).not.have.property('foo');
     })
 
