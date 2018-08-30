@@ -14,7 +14,6 @@ if (typeof module !== 'undefined') {
  */
 
 function Emitter(obj) {
-  (obj || this)._callbacks = Object.create(null);
   if (obj) return mixin(obj);
 };
 
@@ -27,8 +26,11 @@ function Emitter(obj) {
  */
 
 function mixin(obj) {
-  for (var key in Emitter.prototype) {
-    obj[key] = Emitter.prototype[key];
+  var key;
+  for (key in Emitter.prototype) {
+    if (Emitter.prototype.hasOwnProperty(key)) {
+      obj[key] = Emitter.prototype[key];
+    }
   }
   return obj;
 }
@@ -44,6 +46,7 @@ function mixin(obj) {
 
 Emitter.prototype.on =
 Emitter.prototype.addEventListener = function(event, fn){
+  this._callbacks = this._callbacks || Object.create(null);
   (this._callbacks[event] = this._callbacks[event] || [])
     .push(fn);
   return this;
@@ -84,12 +87,13 @@ Emitter.prototype.off =
 Emitter.prototype.removeListener =
 Emitter.prototype.removeAllListeners =
 Emitter.prototype.removeEventListener = function(event, fn){
-
   // all
-  if (0 === arguments.length) {
+  if (arguments.length === 0) {
     this._callbacks = Object.create(null);
     return this;
   }
+  
+  this._callbacks = this._callbacks || Object.create(null);
 
   // specific event
   var callbacks = this._callbacks[event];
@@ -129,8 +133,10 @@ Emitter.prototype.removeEventListener = function(event, fn){
  */
 
 Emitter.prototype.emit = function(event){
+  this._callbacks = this._callbacks || Object.create(null);
+
   var callbacks = this._callbacks[event];
-  
+
   if (callbacks) {
     var args = Array.prototype.slice.call(arguments, 1);
     callbacks = callbacks.slice(0);
@@ -151,6 +157,7 @@ Emitter.prototype.emit = function(event){
  */
 
 Emitter.prototype.listeners = function(event){
+  this._callbacks = this._callbacks || Object.create(null);
   return this._callbacks[event] || [];
 };
 
@@ -173,5 +180,5 @@ Emitter.prototype.hasListeners = function(event){
  * @api public
  */
 Emitter.prototype.eventNames = function(){
-  return Object.keys(this._callbacks);
+  return this._callbacks ? Object.keys(this._callbacks) : [];
 }
