@@ -1,5 +1,6 @@
-
 var Emitter = require('..');
+
+// should(emitter._callbacks) because it has no prototype
 
 function Custom() {
   Emitter.call(this)
@@ -152,7 +153,8 @@ describe('Emitter', function(){
       emitter.on('foo', cb);
       emitter.off('foo', cb);
 
-      emitter._callbacks.should.not.have.property('$foo');
+	  console.log(emitter._callbacks);
+      should(emitter._callbacks).not.have.property('foo');
     })
 
     it('should only remove the event array when the last subscriber unsubscribes', function() {
@@ -166,7 +168,7 @@ describe('Emitter', function(){
       emitter.on('foo', cb2);
       emitter.off('foo', cb1);
 
-      emitter._callbacks.should.have.property('$foo');
+      should(emitter._callbacks).have.property('foo');
     })
   })
 
