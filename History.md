@@ -1,6 +1,7 @@
-## 1.3.6 / 2018-08-30
+## 1.3.7 / 2018-08-30
 
  * Implementation changed
+ * avoid mixin polution
  
 ## 1.3.0 / 2017-02-19
 
