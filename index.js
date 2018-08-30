@@ -14,6 +14,7 @@ if (typeof module !== 'undefined') {
  */
 
 function Emitter(obj) {
+  (obj || this)._callbacks = Object.create(null);
   if (obj) return mixin(obj);
 };
 
@@ -43,7 +44,6 @@ function mixin(obj) {
 
 Emitter.prototype.on =
 Emitter.prototype.addEventListener = function(event, fn){
-  this._callbacks = this._callbacks || Object.create(null);
   (this._callbacks[event] = this._callbacks[event] || [])
     .push(fn);
   return this;
@@ -84,10 +84,9 @@ Emitter.prototype.off =
 Emitter.prototype.removeListener =
 Emitter.prototype.removeAllListeners =
 Emitter.prototype.removeEventListener = function(event, fn){
-  this._callbacks = this._callbacks || Object.create(null);
 
   // all
-  if (0 == arguments.length) {
+  if (0 === arguments.length) {
     this._callbacks = Object.create(null);
     return this;
   }
@@ -130,16 +129,10 @@ Emitter.prototype.removeEventListener = function(event, fn){
  */
 
 Emitter.prototype.emit = function(event){
-  this._callbacks = this._callbacks || Object.create(null);
-
-  var args = new Array(arguments.length - 1)
-    , callbacks = this._callbacks[event];
-
-  for (var i = 1; i < arguments.length; i++) {
-    args[i - 1] = arguments[i];
-  }
-
+  var callbacks = this._callbacks[event];
+  
   if (callbacks) {
+	var args = Array.prototype.slice.call(arguments, 1);
     callbacks = callbacks.slice(0);
     for (var i = 0, len = callbacks.length; i < len; ++i) {
       callbacks[i].apply(this, args);
@@ -158,7 +151,6 @@ Emitter.prototype.emit = function(event){
  */
 
 Emitter.prototype.listeners = function(event){
-  this._callbacks = this._callbacks || Object.create(null);
   return this._callbacks[event] || [];
 };
 
@@ -181,5 +173,5 @@ Emitter.prototype.hasListeners = function(event){
  * @api public
  */
 Emitter.prototype.eventNames = function(){
-  return this._callbacks ? Object.keys(this._callbacks) : [];
+  return Object.keys(this._callbacks);
 }
