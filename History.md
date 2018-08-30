@@ -1,8 +1,12 @@
-1.3.0 / 2017-02-19
+## 1.3.6 / 2018-08-30
+
+ * Implementation changed
+ 
+## 1.3.0 / 2017-02-19
 
  * Added `eventNames`
 
-1.2.2 / 2017-02-19
+## 1.2.2 / 2017-02-19
 
  * Optimized emit
  * Fixed memory leak
