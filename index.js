@@ -89,9 +89,8 @@ Emitter.prototype.off =
 Emitter.prototype.removeListener =
 Emitter.prototype.removeAllListeners =
 Emitter.prototype.removeEventListener = function(event, fn){
-
   // all
-  if (arguments.length === 0) {
+  if (!event) {
     this._callbacks = Object.create(null);
     return this;
   }
@@ -101,7 +100,7 @@ Emitter.prototype.removeEventListener = function(event, fn){
   if (!callbacks) return this;
 
   // remove all handlers
-  if (1 == arguments.length) {
+  if (!fn) {
     delete this._callbacks[event];
     return this;
   }
