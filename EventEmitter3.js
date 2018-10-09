@@ -1,54 +1,28 @@
-
 /**
- * Expose `Emitter`.
- */
-
-if (typeof module !== 'undefined') {
-  module.exports = Emitter;
-}
-
-/**
- * Initialize a new `Emitter`.
+ * Initialize a new `EventEmitter3`.
  *
- * use it as a constructor or as a decorator for an existing object
+ * use it as a constructor
+ * or as a decorator for an existing object
  * cannot be used as a mixin for a constructor's prototype
  * @api public
  */
 
-function Emitter(obj) {
+function EventEmitter3(obj) {
   (obj || this)._callbacks = Object.create(null);
-  if (obj) return mixin(obj);
+  if (obj) return Object.assign(obj, EventEmitter3.prototype);
 };
-
-/**
- * Mixin the emitter properties.
- *
- * @param {Object} obj
- * @return {Object}
- * @api private
- */
-
-function mixin(obj) {
-  var key;
-  for (key in Emitter.prototype) {
-    if (Emitter.prototype.hasOwnProperty(key)) {
-      obj[key] = Emitter.prototype[key];
-    }
-  }
-  return obj;
-}
 
 /**
  * Listen on the given `event` with `fn`.
  *
  * @param {String} event
  * @param {Function} fn
- * @return {Emitter}
+ * @return {EventEmitter3}
  * @api public
  */
 
-Emitter.prototype.on =
-Emitter.prototype.addEventListener = function(event, fn){
+EventEmitter3.prototype.on =
+EventEmitter3.prototype.addEventListener = function(event, fn){
   (this._callbacks[event] = this._callbacks[event] || [])
     .push(fn);
   return this;
@@ -60,14 +34,14 @@ Emitter.prototype.addEventListener = function(event, fn){
  *
  * @param {String} event
  * @param {Function} fn
- * @return {Emitter}
+ * @return {EventEmitter3}
  * @api public
  */
 
-Emitter.prototype.once = function(event, fn){
-  function on() {
+EventEmitter3.prototype.once = function(event, fn){
+  function on(...args) {
     this.off(event, on);
-    fn.apply(this, arguments);
+    fn.apply(this, args);
   }
 
   on.fn = fn;
@@ -81,14 +55,14 @@ Emitter.prototype.once = function(event, fn){
  *
  * @param {String} event
  * @param {Function} fn
- * @return {Emitter}
+ * @return {EventEmitter3}
  * @api public
  */
 
-Emitter.prototype.off =
-Emitter.prototype.removeListener =
-Emitter.prototype.removeAllListeners =
-Emitter.prototype.removeEventListener = function(event, fn){
+EventEmitter3.prototype.off =
+EventEmitter3.prototype.removeListener =
+EventEmitter3.prototype.removeAllListeners =
+EventEmitter3.prototype.removeEventListener = function(event, fn){
   // all
   if (!event) {
     this._callbacks = Object.create(null);
@@ -106,13 +80,11 @@ Emitter.prototype.removeEventListener = function(event, fn){
   }
 
   // remove specific handler
-  var cb;
-  for (var i = 0; i < callbacks.length; i++) {
-    cb = callbacks[i];
-    if (cb === fn || cb.fn === fn) {
-      callbacks.splice(i, 1);
-      break;
-    }
+  var index = callbacks.findIndex(function (cb) {
+      return (cb === fn || cb.fn === fn)
+  });
+  if (index > -1) {
+      callbacks.splice(index, 1);
   }
 
   // Remove event specific arrays for event types that no
@@ -129,19 +101,19 @@ Emitter.prototype.removeEventListener = function(event, fn){
  *
  * @param {String} event
  * @param {Mixed} ...
- * @return {Emitter}
+ * @return {EventEmitter3}
  */
 
-Emitter.prototype.emit = function(event){
+EventEmitter3.prototype.emit = function(event, ...args){
   var callbacks = this._callbacks[event];
-  
-  if (callbacks) {
-    var args = Array.prototype.slice.call(arguments, 1);
-    callbacks = callbacks.slice(0);
-    for (var i = 0, len = callbacks.length; i < len; ++i) {
-      callbacks[i].apply(this, args);
-    }
+
+  if (!callbacks) {
+      return;
   }
+  var frozenCallbacks = Array.from(callbacks);
+  frozenCallbacks.forEach(callback => {
+      callback.apply(this, args);
+  })
 
   return this;
 };
@@ -154,7 +126,7 @@ Emitter.prototype.emit = function(event){
  * @api public
  */
 
-Emitter.prototype.listeners = function(event){
+EventEmitter3.prototype.listeners = function(event){
   return this._callbacks[event] || [];
 };
 
@@ -166,8 +138,8 @@ Emitter.prototype.listeners = function(event){
  * @api public
  */
 
-Emitter.prototype.hasListeners = function(event){
-  return !! this.listeners(event).length;
+EventEmitter3.prototype.hasListeners = function(event){
+  return Boolean(this.listeners(event).length);
 };
 
 /**
@@ -176,6 +148,15 @@ Emitter.prototype.hasListeners = function(event){
  * @return {Array}
  * @api public
  */
-Emitter.prototype.eventNames = function(){
+EventEmitter3.prototype.eventNames = function(){
   return Object.keys(this._callbacks);
+}
+
+
+/**
+ * Expose `EventEmitter3`.
+ */
+
+if (typeof module !== 'undefined') {
+  module.exports = EventEmitter3;
 }
