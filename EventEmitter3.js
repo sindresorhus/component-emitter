@@ -1,7 +1,5 @@
 /**
- * Initialize a new `EventEmitter3`.
- *
- * use it as a constructor
+ * Use it as a constructor
  * or as a decorator for an existing object
  * cannot be used as a mixin for a constructor's prototype
  * @api public
@@ -13,7 +11,7 @@ function EventEmitter3(obj) {
 };
 
 /**
- * Listen on the given `event` with `fn`.
+ * Listen on the given `event` with `fn`
  *
  * @param {String} event
  * @param {Function} fn
@@ -29,8 +27,7 @@ EventEmitter3.prototype.addEventListener = function(event, fn){
 };
 
 /**
- * Adds an `event` listener that will be invoked a single
- * time then automatically removed.
+ * Adds an `event` listener that will be invoked once then removed
  *
  * @param {String} event
  * @param {Function} fn
@@ -50,8 +47,9 @@ EventEmitter3.prototype.once = function(event, fn){
 };
 
 /**
- * Remove the given callback for `event` or all
- * registered callbacks.
+ * Remove callback for `event` or
+ * all callbacks for `event` or
+ * all callbacks for all events
  *
  * @param {String} event
  * @param {Function} fn
@@ -87,8 +85,8 @@ EventEmitter3.prototype.removeEventListener = function(event, fn){
       callbacks.splice(index, 1);
   }
 
-  // Remove event specific arrays for event types that no
-  // one is subscribed for to avoid memory leak.
+  // Remove event specific arrays for the event type that no
+  // one is subscribed for, to avoid memory leak.
   if (callbacks.length === 0) {
     delete this._callbacks[event];
   }
@@ -97,7 +95,7 @@ EventEmitter3.prototype.removeEventListener = function(event, fn){
 };
 
 /**
- * Emit `event` with the given args.
+ * Emit `event` with args
  *
  * @param {String} event
  * @param {Mixed} ...
@@ -119,7 +117,7 @@ EventEmitter3.prototype.emit = function(event, ...args){
 };
 
 /**
- * Return array of callbacks for `event`.
+ * Return array of callbacks for `event`
  *
  * @param {String} event
  * @return {Array}
@@ -131,7 +129,7 @@ EventEmitter3.prototype.listeners = function(event){
 };
 
 /**
- * Check if this emitter has `event` handlers.
+ * True if this emitter has `event` handlers
  *
  * @param {String} event
  * @return {Boolean}
@@ -143,7 +141,7 @@ EventEmitter3.prototype.hasListeners = function(event){
 };
 
 /**
- * Returns an array listing the events for which the emitter has registered listeners.
+ * Returns an array of events for which the emitter has registered listeners
  *
  * @return {Array}
  * @api public
@@ -151,11 +149,6 @@ EventEmitter3.prototype.hasListeners = function(event){
 EventEmitter3.prototype.eventNames = function(){
   return Object.keys(this._callbacks);
 }
-
-
-/**
- * Expose `EventEmitter3`.
- */
 
 if (typeof module !== 'undefined') {
   module.exports = EventEmitter3;
