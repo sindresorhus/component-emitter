@@ -1,4 +1,4 @@
-var Emitter = require('..');
+var Emitter = require('../EventEmitter3.js');
 
 function Custom() {
   Emitter.call(this)
@@ -230,7 +230,7 @@ describe('Emitter', function(){
 describe('Emitter(obj)', function(){
   it('should mixin', function(){
     var calls = [];
-	
+
     var proto = {};
     Emitter(proto);
     proto.on('something', function() {
@@ -240,17 +240,18 @@ describe('Emitter(obj)', function(){
 
     calls.should.eql([7]);
   })
-  
-  describe('prototype mixin', function(){
+
+
+  xdescribe('prototype mixin is available in this version https://github.com/GrosSacASac/emitter/releases/tag/1.3.7', function(){
 	  it('should work on instances', function(){
       var User = function (name, age = 18) {
         this.age = age;
         // this.name = name;
       };
       Emitter(User.prototype);
-      
+
       const julie = new User('Julie');
-      
+
       julie.on('birthday', function() {
         julie.age++;
       });
@@ -264,10 +265,10 @@ describe('Emitter(obj)', function(){
         this.age = age;
       };
       Emitter(User.prototype);
-      
+
       const julie = new User('Julie');
       const moritz = new User('Moritz');
-      
+
       julie.on('birthday', function() {
         julie.age++;
       });
@@ -279,7 +280,7 @@ describe('Emitter(obj)', function(){
       julie.age.should.eql(19);
       moritz.age.should.eql(18, 'it was not the birthday of Moritz');
     })
-  
+
     it('should work separately on instance and constructor', function() {
       var User = function (name, age = 18) {
         this.age = age;
@@ -287,7 +288,7 @@ describe('Emitter(obj)', function(){
       Emitter(User.prototype);
       var age = 1000;
       const julie = new User('Julie');
-      
+
       julie.on('birthday', function() {
         julie.age++;
       });
@@ -295,10 +296,10 @@ describe('Emitter(obj)', function(){
         age++;
       });
       User.prototype.emit('birthday');
-      
+
       julie.age.should.eql(18);
       age.should.eql(1001);
-      
+
       julie.emit('birthday');
       julie.age.should.eql(19);
       age.should.eql(1001);

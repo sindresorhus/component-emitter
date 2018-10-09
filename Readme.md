@@ -5,7 +5,7 @@
 ## Installation
 
 ```
-download index.js
+download EventEmitter3.js
 ```
 
 ## API
@@ -69,10 +69,6 @@ user.emit('im a user');
 
 `npm t`
 
-or
-
-` ./node_modules/.bin/mocha --require should --reporter spec`
- 
 ## License
 
 MIT

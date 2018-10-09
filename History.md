@@ -1,8 +1,20 @@
+## 3.0.0
+
+ * Leverage ES2015+ features for cleaner code
+ * Use package-lock.json for stability
+ * Rename into EventEmitter3.js
+ * Remove make file (see readme)
+ * Disable outdated tests
+
+## 2.0.0
+
+ * Cannot be used as a prototype mixin anymore
+
 ## 1.3.7 / 2018-08-30
 
  * Implementation changed
  * avoid mixin polution
- 
+
 ## 1.3.0 / 2017-02-19
 
  * Added `eventNames`
