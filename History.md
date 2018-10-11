@@ -1,3 +1,11 @@
+## 4.0.0
+
+ * name is event-e3 (package.json)
+ * name is event-e3 (github)
+ * publish event-e3 to npm
+ * expose as ES Module (default export)
+
+
 ## 3.0.0
 
  * Leverage ES2015+ features for cleaner code

@@ -6,7 +6,7 @@ function Custom() {
 
 Custom.prototype.__proto__ = Emitter.prototype;
 
-describe('Custom', function(){
+describe('Prototype inheritance', function(){
   describe('with Emitter.call(this)', function(){
     it('should work', function(done){
       var emitter = new Custom;
@@ -112,10 +112,11 @@ describe('Emitter', function(){
       function b () {
         called = true;
       }
+      emitter.on('tobi', b);
       emitter.on('tobi', function () {
         emitter.off('tobi', b);
       });
-      emitter.on('tobi', b);
+
       emitter.emit('tobi');
       called.should.be.true;
       called = false;

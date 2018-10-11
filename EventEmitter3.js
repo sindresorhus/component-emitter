@@ -150,6 +150,4 @@ EventEmitter3.prototype.eventNames = function(){
   return Object.keys(this._callbacks);
 }
 
-if (typeof module !== 'undefined') {
-  module.exports = EventEmitter3;
-}
+export default EventEmitter3;
