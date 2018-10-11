@@ -1,4 +1,5 @@
-var Emitter = require('../EventEmitter3.js');
+import Emitter from '../EventEmitter3.mjs';
+import should from 'should'
 
 function Custom() {
   Emitter.call(this)

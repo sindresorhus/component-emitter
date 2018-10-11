@@ -1,15 +1,16 @@
 {
   "name": "event-e3",
   "description": "Universal, light Event emitter",
-  "version": "4.0.0",
+  "version": "4.0.1",
   "license": "MIT",
   "devDependencies": {
     "mocha": "5.2.0",
+    "mocha-esm": "^1.1.1",
     "should": "13.2.3"
   },
-  "main": "EventEmitter3.js",
+  "module": "EventEmitter3.mjs",
   "scripts": {
-    "test": "mocha --require should --reporter spec test/EventEmitter3.spec.js"
+    "test": "mocha-esm --reporter spec test/EventEmitter3.spec.mjs"
   },
   "files": [
     "EventEmitter3.js",

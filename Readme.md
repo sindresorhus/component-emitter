@@ -1,36 +1,37 @@
-# Emitter
+# event-e3
 
-  Event emitter component.
+Event Emitter 3
 
 ## Installation
 
 ```
-download EventEmitter3.js
+npm i event-e3
+```
+
+## import
+
+```js
+import Emitter from "event-e3";
 ```
 
 ## API
 
 ### Emitter(obj)
 
-  The `Emitter` may also be used as a mixin. For example
-  a "plain" object may become an emitter.
-
   As an `Emitter` instance:
 
 ```js
-var Emitter = require('emitter');
-var emitter = new Emitter();
-emitter.emit('something');
+const emitter = new Emitter();
+emitter.emit('new value', 5);
 ```
 
   As a mixin:
 
 ```js
-var Emitter = require('emitter');
-var user = { name: 'tobi' };
+const user = { name: 'tobi' };
 Emitter(user);
 
-user.emit('im a user');
+user.emit(`I'm a user`, true);
 ```
 
 ### Emitter#on(event, fn)
@@ -51,7 +52,7 @@ user.emit('im a user');
 
 ### Emitter#emit(event, ...)
 
-  Emit an `event` with variable option args.
+  Emit an `event` with any amount of arguments.
 
 ### Emitter#listeners(event)
 
@@ -59,7 +60,7 @@ user.emit('im a user');
 
 ### Emitter#hasListeners(event)
 
-  Check if this emitter has `event` handlers.
+  True if this emitter has any `event` handlers.
 
 ### Emitter#eventNames()
 
