@@ -1,7 +1,7 @@
 {
   "name": "event-e3",
   "description": "Universal light Event Emitter",
-  "version": "4.0.2",
+  "version": "4.0.3",
   "license": "MIT",
   "devDependencies": {
     "mocha": "5.2.0",

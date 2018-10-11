@@ -4,9 +4,7 @@ Event Emitter 3
 
 ## Installation
 
-```
-npm i event-e3
-```
+[`npm i event-e3`](https://www.npmjs.com/package/event-e3)
 
 ## import
 
