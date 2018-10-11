@@ -1,7 +1,7 @@
 {
   "name": "event-e3",
-  "description": "Universal, light Event emitter",
-  "version": "4.0.1",
+  "description": "Universal light Event Emitter",
+  "version": "4.0.2",
   "license": "MIT",
   "devDependencies": {
     "mocha": "5.2.0",
@@ -16,5 +16,9 @@
     "EventEmitter3.js",
     "History.md",
     "LICENSE"
-  ]
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/GrosSacASac/event-e3.git"
+  }
 }
