@@ -4,13 +4,14 @@
   "version": "4.0.3",
   "license": "MIT",
   "devDependencies": {
+    "mjs-mocha": "^2.1.2",
     "mocha": "5.2.0",
     "mocha-esm": "^1.1.1",
     "should": "13.2.3"
   },
   "module": "EventEmitter3.mjs",
   "scripts": {
-    "test": "mocha-esm --reporter spec test/EventEmitter3.spec.mjs"
+    "test": "node --experimental-modules test/EventEmitter3_Test.mjs"
   },
   "files": [
     "EventEmitter3.js",
