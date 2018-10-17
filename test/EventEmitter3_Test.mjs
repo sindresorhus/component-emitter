@@ -1,4 +1,3 @@
-
 import Emitter from '../EventEmitter3.mjs';
 import assert from 'assert'
 import 'mjs-mocha';

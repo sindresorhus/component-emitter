@@ -1,3 +1,8 @@
+## 4.0.5
+
+ * Reenable tests
+ * Rename into EventEmitter3.mjs
+
 ## 4.0.0
 
  * name is event-e3 (package.json)
