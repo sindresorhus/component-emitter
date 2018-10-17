@@ -111,7 +111,7 @@ EventEmitter3.prototype.emit = function(event, ...args){
   var frozenCallbacks = Array.from(callbacks);
   frozenCallbacks.forEach(callback => {
       callback.apply(this, args);
-  })
+  });
 
   return this;
 };

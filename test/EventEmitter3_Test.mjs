@@ -1,3 +1,4 @@
+
 import Emitter from '../EventEmitter3.mjs';
 import assert from 'assert'
 import 'mjs-mocha';
@@ -7,6 +8,25 @@ function Custom() {
 }
 
 Custom.prototype.__proto__ = Emitter.prototype;
+
+describe('Prototype inheritance', function(){
+  describe('with Emitter.call(this)', function(){
+    it('should work', function(done) {
+      /* done is undefined
+      https://github.com/vpotseluyko/mjs-mocha/blob/master/src/mocha.mjs#L38
+      */
+      let run = false
+
+      var emitter = new Custom();
+      emitter.on('foo', () => {
+        run = true
+      });
+      emitter.emit('foo');
+
+      assert.deepEqual(run, true);
+    })
+  })
+})
 
 describe('Emitter', function(){
   describe('.on(event, fn)', function(){

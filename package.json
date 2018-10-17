@@ -1,13 +1,10 @@
 {
   "name": "event-e3",
   "description": "Universal light Event Emitter",
-  "version": "4.0.3",
+  "version": "4.0.4",
   "license": "MIT",
   "devDependencies": {
-    "mjs-mocha": "^2.1.2",
-    "mocha": "5.2.0",
-    "mocha-esm": "^1.1.1",
-    "should": "13.2.3"
+    "mjs-mocha": "^2.1.2"
   },
   "module": "EventEmitter3.mjs",
   "scripts": {
