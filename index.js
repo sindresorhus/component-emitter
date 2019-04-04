@@ -50,6 +50,26 @@ Emitter.prototype.addEventListener = function(event, fn){
 };
 
 /**
+ * Listen on a list of given `events` with `fn`.
+ *
+ * @param {Array} events
+ * @param {Function} fn
+ * @return {Emitter}
+ * @api public
+ */
+
+Emitter.prototype.addEventsListener = function(events, fn){
+  this._callbacks = this._callbacks || {};
+
+  events.forEach(event => {
+    (this._callbacks['$' + event] = this._callbacks['$' + event] || [])
+    .push(fn);
+  })
+  
+  return this;
+};
+
+/**
  * Adds an `event` listener that will be invoked a single
  * time then automatically removed.
  *
