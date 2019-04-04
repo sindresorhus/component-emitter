@@ -57,6 +57,24 @@ describe('Emitter', function(){
     })
   })
 
+  describe('.addEventsListener(events, fn)', function(){
+    it('should add listener to multiple events', function(){
+      var emitter = new Emitter;
+      var calls = [];
+
+      emitter.addEventsListener(['foo', 'bar'], function(val){
+        calls.push(val);
+      });
+
+      emitter.emit('foo', 1);
+      emitter.emit('bar', 2);
+      emitter.emit('foo', 2);
+      emitter.emit('bar', 1);
+
+      calls.should.eql([ 1, 2, 2, 1 ]);
+    })
+  })
+
   describe('.once(event, fn)', function(){
     it('should add a single-shot listener', function(){
       var emitter = new Emitter;
