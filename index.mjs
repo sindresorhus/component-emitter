@@ -1,17 +1,10 @@
-
-/**
- * Expose `Emitter`.
- */
-
-exports.Emitter = Emitter;
-
 /**
  * Initialize a new `Emitter`.
  *
  * @api public
  */
 
-function Emitter(obj) {
+export function Emitter(obj) {
   if (obj) return mixin(obj);
 }
 
@@ -140,11 +133,7 @@ Emitter.prototype.emit = function(event){
   if (callbacks) {
     callbacks = callbacks.slice(0);
     for (var i = 0, len = callbacks.length; i < len; ++i) {
-      if(callbacks[i] && typeof callbacks[i] === 'function') {
-        callbacks[i].apply(this, args);
-      }else {
-        console.warn("You skipped adding callbacks in any socket.on use. Please check your socket.on functions.");
-      }
+      callbacks[i].apply(this, args);
     }
   }
 
