@@ -140,7 +140,11 @@ Emitter.prototype.emit = function(event){
   if (callbacks) {
     callbacks = callbacks.slice(0);
     for (var i = 0, len = callbacks.length; i < len; ++i) {
-      callbacks[i].apply(this, args);
+      if(callbacks[i] && typeof callbacks[i] === 'function') {
+        callbacks[i].apply(this, args);
+      }else {
+        console.warn("You skipped adding callbacks in any socket.on use. Please check your socket.on functions.");
+      }
     }
   }
 
