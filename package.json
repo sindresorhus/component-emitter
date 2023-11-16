@@ -1,27 +1,37 @@
 {
-  "name": "component-emitter",
-  "description": "Event emitter",
-  "version": "1.3.1",
-  "license": "MIT",
-  "devDependencies": {
-    "mocha": "*",
-    "should": "*"
-  },
-  "component": {
-    "scripts": {
-      "emitter/index.js": "index.js"
-    }
-  },
-  "main": "index.js",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/sindresorhus/component-emitter.git"
-  },
-  "scripts": {
-    "test": "make test"
-  },
-  "files": [
-    "index.js",
-    "LICENSE"
-  ]
+	"name": "component-emitter",
+	"version": "0.0.0",
+	"description": "Simple event emitter",
+	"license": "MIT",
+	"repository": "sindresorhus/component-emitter",
+	"funding": "https://github.com/sponsors/sindresorhus",
+	"exports": {
+		"types": "./index.d.ts",
+		"default": "./index.js"
+	},
+	"main": "./index.js",
+	"types": "./index.d.ts",
+	"sideEffects": false,
+	"engines": {
+		"node": ">=18"
+	},
+	"scripts": {
+		"test": "xo && ava"
+	},
+	"files": [
+		"index.js",
+		"index.d.ts"
+	],
+	"keywords": [
+		""
+	],
+	"devDependencies": {
+		"ava": "^5.3.1",
+		"xo": "^0.56.0"
+	},
+	"xo": {
+		"rules": {
+			"unicorn/prefer-module": "off"
+		}
+	}
 }
