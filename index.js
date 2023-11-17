@@ -3,17 +3,19 @@ function Emitter(object) {
 		return mixin(object);
 	}
 
-	this._callbacks = {};
+	this._callbacks = new Map();
 }
 
 function mixin(object) {
 	Object.assign(object, Emitter.prototype);
-	object._callbacks = {};
+	object._callbacks = new Map();
 	return object;
 }
 
 Emitter.prototype.on = function (event, listener) {
-	(this._callbacks['$' + event] = this._callbacks['$' + event] ?? []).push(listener);
+	const callbacks = this._callbacks.get(event) ?? [];
+	callbacks.push(listener);
+	this._callbacks.set(event, callbacks);
 	return this;
 };
 
@@ -29,20 +31,17 @@ Emitter.prototype.once = function (event, listener) {
 };
 
 Emitter.prototype.off = function (event, listener) {
-	// No arguments: remove all callbacks
 	if (event === undefined && listener === undefined) {
-		this._callbacks = {};
+		this._callbacks.clear();
 		return this;
 	}
 
-	// Only event specified: remove all listeners for that event
 	if (listener === undefined) {
-		delete this._callbacks['$' + event];
+		this._callbacks.delete(event);
 		return this;
 	}
 
-	// Both event and listener specified: remove the specific listener
-	const callbacks = this._callbacks['$' + event];
+	const callbacks = this._callbacks.get(event);
 	if (callbacks) {
 		for (const [index, callback] of callbacks.entries()) {
 			if (callback === listener || callback.fn === listener) {
@@ -51,9 +50,10 @@ Emitter.prototype.off = function (event, listener) {
 			}
 		}
 
-		// Clean up if no more listeners remain for the event
 		if (callbacks.length === 0) {
-			delete this._callbacks['$' + event];
+			this._callbacks.delete(event);
+		} else {
+			this._callbacks.set(event, callbacks);
 		}
 	}
 
@@ -61,10 +61,12 @@ Emitter.prototype.off = function (event, listener) {
 };
 
 Emitter.prototype.emit = function (event, ...arguments_) {
-	let callbacks = this._callbacks['$' + event];
+	const callbacks = this._callbacks.get(event);
 	if (callbacks) {
-		callbacks = [...callbacks];
-		for (const callback of callbacks) {
+		// Create a copy of the callbacks array to avoid issues if it's modified during iteration
+		const callbacksCopy = [...callbacks];
+
+		for (const callback of callbacksCopy) {
 			callback.apply(this, arguments_);
 		}
 	}
@@ -73,7 +75,7 @@ Emitter.prototype.emit = function (event, ...arguments_) {
 };
 
 Emitter.prototype.listeners = function (event) {
-	return this._callbacks['$' + event] ?? [];
+	return this._callbacks.get(event) ?? [];
 };
 
 Emitter.prototype.hasListeners = function (event) {
