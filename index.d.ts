@@ -59,12 +59,34 @@ type Emitter = {
 	listeners(event: string): Array<(...arguments_: any[]) => void>;
 
 	/**
+	Get the count of listeners for a specific event.
+
+	@param event - The name of the event.
+	@returns The number of listeners for the event.
+	*/
+	listenerCount(event: string): number; // eslint-disable-line @typescript-eslint/unified-signatures
+
+	/**
+	Get the count of all event handlers in total.
+
+	@returns The total number of event handlers.
+	*/
+	listenerCount(): number;
+
+	/**
 	Check if there are any handlers registered for a specific event.
 
 	@param event - The name of the event.
 	@returns `true` if there are one or more handlers, `false` otherwise.
 	*/
-	hasListeners(event: string): boolean;
+	hasListeners(event: string): boolean; // eslint-disable-line @typescript-eslint/unified-signatures
+
+	/**
+	Check if there are any handlers registered for any event.
+
+	@returns `true` if there are one or more handlers for any event, `false` otherwise.
+	*/
+	hasListeners(): boolean;
 };
 
 type EmitterConstructor = {

@@ -366,3 +366,48 @@ test('Alias methods should work as expected', t => {
 	emitter.emit('foo');
 	t.false(isCalled);
 });
+
+test('Emitter.listenerCount returns the correct count for a specific event', t => {
+	const emitter = new Emitter();
+
+	emitter.on('foo', () => {});
+	emitter.on('foo', () => {});
+	emitter.once('bar', () => {});
+
+	t.is(emitter.listenerCount('foo'), 2);
+	t.is(emitter.listenerCount('bar'), 1);
+	t.is(emitter.listenerCount('baz'), 0);
+});
+
+test('Emitter.listenerCount returns the correct count for all events', t => {
+	const emitter = new Emitter();
+
+	emitter.on('foo', () => {});
+	emitter.on('bar', () => {});
+	emitter.once('baz', () => {});
+
+	t.is(emitter.listenerCount(), 3);
+});
+
+test('Emitter.hasListeners returns true when there are listeners for a specific event', t => {
+	const emitter = new Emitter();
+
+	emitter.on('foo', () => {});
+	emitter.on('bar', () => {});
+	emitter.once('baz', () => {});
+
+	t.true(emitter.hasListeners('foo'));
+	t.true(emitter.hasListeners('bar'));
+	t.true(emitter.hasListeners('baz'));
+	t.false(emitter.hasListeners('qux'));
+});
+
+test('Emitter.hasListeners returns true when there are listeners for any event', t => {
+	const emitter = new Emitter();
+
+	emitter.on('foo', () => {});
+	emitter.once('bar', () => {});
+	emitter.once('baz', () => {});
+
+	t.true(emitter.hasListeners());
+});

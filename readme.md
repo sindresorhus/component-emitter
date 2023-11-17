@@ -73,9 +73,21 @@ Emit an event, invoking all handlers registered for it.
 
 Retrieve the event handlers registered for a specific event.
 
+### Emitter#listenerCount(event)
+
+Get the count of listeners for a specific event.
+
+### Emitter#listenerCount()
+
+Get the count of all event handlers in total.
+
 ### Emitter#hasListeners(event)
 
 Check if there are any handlers registered for a specific event.
+
+### Emitter#hasListeners()
+
+Check if there are any handlers registered for any event.
 
 ## FAQ
 

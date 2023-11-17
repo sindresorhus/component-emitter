@@ -78,8 +78,21 @@ Emitter.prototype.listeners = function (event) {
 	return this._callbacks.get(event) ?? [];
 };
 
+Emitter.prototype.listenerCount = function (event) {
+	if (event) {
+		return this.listeners(event).length;
+	}
+
+	let totalCount = 0;
+	for (const callbacks of this._callbacks.values()) {
+		totalCount += callbacks.length;
+	}
+
+	return totalCount;
+};
+
 Emitter.prototype.hasListeners = function (event) {
-	return this.listeners(event).length > 0;
+	return this.listenerCount(event) > 0;
 };
 
 // Aliases
