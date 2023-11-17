@@ -76,3 +76,9 @@ Retrieve the event handlers registered for a specific event.
 ### Emitter#hasListeners(event)
 
 Check if there are any handlers registered for a specific event.
+
+## FAQ
+
+### How does it differ from the Node.js EventEmitter?
+
+It's simpler and more lightweight, and it works in any JavaScript environment, not just Node.js. It also provides mixin functionality to add event handling to existing objects without needing inheritance.
