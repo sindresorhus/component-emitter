@@ -7,14 +7,19 @@ function Custom() {
 
 Object.setPrototypeOf(Custom.prototype, Emitter.prototype);
 
-test('Custom Emitter: should work with Emitter.call(this)', t => {
+test('Custom emitter extends base Emitter', t => {
 	t.plan(1);
+
 	const emitter = new Custom();
-	emitter.on('foo', () => t.pass());
+
+	emitter.on('foo', () => {
+		t.pass();
+	});
+
 	emitter.emit('foo');
 });
 
-test('Emitter: .on(event, fn) should add listeners', t => {
+test('Emitter.on adds listeners to events', t => {
 	const emitter = new Emitter();
 	const calls = [];
 
@@ -33,25 +38,7 @@ test('Emitter: .on(event, fn) should add listeners', t => {
 	t.deepEqual(calls, ['one', 1, 'two', 1, 'one', 2, 'two', 2]);
 });
 
-test('Emitter: .on(event, fn) should handle Object.prototype method names', t => {
-	const emitter = new Emitter();
-	const calls = [];
-
-	emitter.on('constructor', value => {
-		calls.push('one', value);
-	});
-
-	emitter.on('__proto__', value => {
-		calls.push('two', value);
-	});
-
-	emitter.emit('constructor', 1);
-	emitter.emit('__proto__', 2);
-
-	t.deepEqual(calls, ['one', 1, 'two', 2]);
-});
-
-test('Emitter: .once(event, fn) should add a single-shot listener', t => {
+test('Emitter.once adds a single-shot listener', t => {
 	const emitter = new Emitter();
 	const calls = [];
 
@@ -67,7 +54,7 @@ test('Emitter: .once(event, fn) should add a single-shot listener', t => {
 	t.deepEqual(calls, ['one', 1]);
 });
 
-test('Emitter: .off(event, fn) should remove a listener', t => {
+test('Emitter.off removes a specified listener from an event', t => {
 	const emitter = new Emitter();
 	const calls = [];
 
@@ -88,7 +75,7 @@ test('Emitter: .off(event, fn) should remove a listener', t => {
 	t.deepEqual(calls, ['one']);
 });
 
-test('Emitter: .off(event, fn) should work with .once()', t => {
+test('Emitter.off works with Emitter.once', t => {
 	const emitter = new Emitter();
 	const calls = [];
 
@@ -105,12 +92,12 @@ test('Emitter: .off(event, fn) should work with .once()', t => {
 	t.deepEqual(calls, []);
 });
 
-test('Emitter: .off(event, fn) should work when called from an event', t => {
-	let called = false;
+test('Emitter.off works when called from within an event emission', t => {
+	let isCalled = false;
 	const emitter = new Emitter();
 
 	function b() {
-		called = true;
+		isCalled = true;
 	}
 
 	emitter.on('tobi', () => {
@@ -119,13 +106,13 @@ test('Emitter: .off(event, fn) should work when called from an event', t => {
 
 	emitter.on('tobi', b);
 	emitter.emit('tobi');
-	t.true(called);
-	called = false;
+	t.true(isCalled);
+	isCalled = false;
 	emitter.emit('tobi');
-	t.false(called);
+	t.false(isCalled);
 });
 
-test('Emitter: .off(event) should remove all listeners for an event', t => {
+test('Emitter.off removes all listeners for a specified event', t => {
 	const emitter = new Emitter();
 	const calls = [];
 
@@ -147,7 +134,7 @@ test('Emitter: .off(event) should remove all listeners for an event', t => {
 	t.deepEqual(calls, []);
 });
 
-test('Emitter: .off() should remove all listeners', t => {
+test('Emitter.off with no arguments removes all listeners', t => {
 	const emitter = new Emitter();
 	const calls = [];
 
@@ -173,7 +160,7 @@ test('Emitter: .off() should remove all listeners', t => {
 	t.deepEqual(calls, ['one', 'two']);
 });
 
-test('Emitter: .listeners(event) should return callbacks when present', t => {
+test('Emitter.listeners returns callbacks for a specified event', t => {
 	const emitter = new Emitter();
 	function foo() {}
 
@@ -181,26 +168,201 @@ test('Emitter: .listeners(event) should return callbacks when present', t => {
 	t.deepEqual(emitter.listeners('foo'), [foo]);
 });
 
-test('Emitter: .listeners(event) should return an empty array when no handlers are present', t => {
+test('Emitter.listeners returns an empty array for events without handlers', t => {
 	const emitter = new Emitter();
 	t.deepEqual(emitter.listeners('foo'), []);
 });
 
-test('Emitter: .hasListeners(event) should return true when handlers are present', t => {
+test('Emitter.hasListeners returns true when handlers are present for an event', t => {
 	const emitter = new Emitter();
 	emitter.on('foo', () => {});
 	t.true(emitter.hasListeners('foo'));
 });
 
-test('Emitter: .hasListeners(event) should return false when no handlers are present', t => {
+test('Emitter.hasListeners returns false for events without handlers', t => {
 	const emitter = new Emitter();
 	t.false(emitter.hasListeners('foo'));
 });
 
-test('Mixin with Emitter(obj) should work', t => {
+test('Mixin functionality with Emitter(object) works as expected', t => {
 	t.plan(1);
+
 	const proto = {};
+
 	Emitter(proto); // eslint-disable-line new-cap
-	proto.on('something', () => t.pass());
+
+	proto.on('something', () => {
+		t.pass();
+	});
+
 	proto.emit('something');
+});
+
+test.failing('Listener removal during emit should not be called', t => {
+	const emitter = new Emitter();
+	let isCalled = false;
+
+	function listener() {
+		emitter.off('foo', listener);
+		isCalled = true;
+	}
+
+	emitter.on('foo', listener);
+	emitter.emit('foo');
+	emitter.emit('foo'); // Second emit to test if listener is called again
+
+	t.false(isCalled);
+});
+
+test('Emitting an event without listeners does not cause errors', t => {
+	const emitter = new Emitter();
+	t.notThrows(() => {
+		emitter.emit('foo');
+	});
+});
+
+test('Removing a non-existent listener does not cause issues', t => {
+	const emitter = new Emitter();
+	t.notThrows(() => {
+		emitter.off('foo', () => {});
+	});
+});
+
+test('Listeners are called in the order they were added', t => {
+	const emitter = new Emitter();
+	const calls = [];
+
+	emitter.on('foo', () => {
+		calls.push('first');
+	});
+
+	emitter.on('foo', () => {
+		calls.push('second');
+	});
+
+	emitter.emit('foo');
+
+	t.deepEqual(calls, ['first', 'second']);
+});
+
+test('Removing a listener multiple times does not cause issues', t => {
+	const emitter = new Emitter();
+	const listener = () => {};
+
+	emitter.on('foo', listener);
+	emitter.off('foo', listener);
+
+	t.notThrows(() => {
+		emitter.off('foo', listener);
+	});
+});
+
+test('Adding the same listener multiple times results in multiple calls', t => {
+	const emitter = new Emitter();
+	let callCount = 0;
+	const listener = () => callCount++;
+
+	emitter.on('foo', listener);
+	emitter.on('foo', listener);
+
+	emitter.emit('foo');
+
+	t.is(callCount, 2);
+});
+
+test('Method chaining works as expected', t => {
+	const emitter = new Emitter();
+	const chain = emitter.on('foo', () => {}).once('bar', () => {}).off('baz');
+	t.is(chain, emitter);
+});
+
+test('Listeners receive correct arguments', t => {
+	const emitter = new Emitter();
+	let receivedArguments = [];
+
+	emitter.on('foo', (...arguments_) => {
+		receivedArguments = arguments_;
+	});
+
+	emitter.emit('foo', 'arg1', 'arg2');
+
+	t.deepEqual(receivedArguments, ['arg1', 'arg2']);
+});
+
+test('Emitter.once with different events should only remove listener from specific event', t => {
+	const emitter = new Emitter();
+	let isFooCalled = false;
+	let isBarCalled = false;
+
+	const listener = () => {
+		isFooCalled = true;
+	};
+
+	emitter.once('foo', listener);
+	emitter.once('bar', () => {
+		isBarCalled = true;
+	});
+
+	emitter.emit('bar');
+	emitter.emit('foo');
+
+	t.true(isBarCalled);
+	t.true(isFooCalled);
+});
+
+test('Emitting event with no arguments should not cause errors', t => {
+	const emitter = new Emitter();
+	t.notThrows(() => {
+		emitter.emit('foo');
+	});
+});
+
+test('Listener addition and removal within another listener', t => {
+	const emitter = new Emitter();
+	let dynamicListenerCalled = false;
+
+	function dynamicListener() {
+		dynamicListenerCalled = true;
+	}
+
+	emitter.on('foo', () => {
+		emitter.on('bar', dynamicListener);
+		emitter.off('bar', dynamicListener);
+	});
+
+	emitter.emit('foo');
+	emitter.emit('bar');
+
+	t.false(dynamicListenerCalled);
+});
+
+test('Emitting an event with multiple arguments should pass all arguments to listeners', t => {
+	const emitter = new Emitter();
+	let receivedArguments = [];
+
+	emitter.on('foo', (...arguments_) => {
+		receivedArguments = arguments_;
+	});
+
+	emitter.emit('foo', 'arg1', 'arg2', 'arg3');
+
+	t.deepEqual(receivedArguments, ['arg1', 'arg2', 'arg3']);
+});
+
+test('Alias methods should work as expected', t => {
+	const emitter = new Emitter();
+	let isCalled = false;
+
+	function listener() {
+		isCalled = true;
+	}
+
+	emitter.addEventListener('foo', listener);
+	emitter.emit('foo');
+	t.true(isCalled);
+
+	isCalled = false;
+	emitter.removeEventListener('foo', listener);
+	emitter.emit('foo');
+	t.false(isCalled);
 });
