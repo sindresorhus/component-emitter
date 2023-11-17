@@ -41,9 +41,13 @@ Emitter(User.prototype);
 
 ## API
 
+### new Emitter()
+
+Create a new emitter.
+
 ### Emitter(object)
 
-The `Emitter` may also be used as a mixin. For example a plain object may become an emitter, or you may extend an existing prototype.
+Use it as a mixin. For example a plain object may become an emitter, or you may extend an existing prototype.
 
 ### Emitter#on(event, listener)
 
